@@ -1,0 +1,47 @@
+name: Basic workflow
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+  merge_group:
+    types: [checks_requested]
+
+jobs:
+  lint-typecheck:
+    name: Lint and Typecheck
+
+    runs-on: ubuntu-latest
+
+    env:
+      TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+      TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+      BIGCOMMERCE_STORE_HASH: ${{ secrets.BIGCOMMERCE_STORE_HASH }}
+      BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN: ${{ secrets.BIGCOMMERCE_CUSTOMER_IMPERSONATION_TOKEN }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@main
+        with:
+          fetch-depth: 2
+
+      - uses: pnpm/action-setup@v2
+
+      - name: Use Node.js
+        uses: actions/setup-node@main
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Graphql Codegen
+        run: pnpm run -r codegen
+
+      - name: Lint
+        run: pnpm run lint -- --max-warnings=0
+
+      - name: Typecheck
+        run: pnpm run typecheck

@@ -1,0 +1,13 @@
+node_modules
+dist
+.turbo
+.vscode/**/*
+!.vscode/settings.example.json
+.env
+.env*.local
+/test-results/
+/playwright-report/
+/playwright/.cache/
+apps/core/client/generated
+apps/core/schema.graphql
+.vercel
