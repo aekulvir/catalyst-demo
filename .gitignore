@@ -3,7 +3,6 @@ dist
 .turbo
 .vscode/**/*
 !.vscode/settings.example.json
-.env
 .env*.local
 /test-results/
 /playwright-report/
